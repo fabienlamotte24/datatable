@@ -1,0 +1,118 @@
+{% extends 'base.html.twig' %}
+
+{# STYLESHEETS #}
+{% block stylesheets %}
+    <link href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.20/datatables.min.css"/>
+{% endblock %}
+
+{# BODY #}
+{% block body %}
+    <div class="container-fluid">
+        {# FORMULAIRE INSCRIPTION CLIENT #}
+        <div class="row">
+            <div class="offset-3 col-6 text-center border border-dark">
+                {# TITRE FORMULAIRE #}
+                <div>
+                    <h2>Inscription Client</h2>
+                </div>
+                <hr>
+                {# FORMULAIRE #}
+                <div>
+                    {{ form_start(form, {'attr': {'class': 'text-center m-5'}}) }}
+
+                        {# CHAMPS NOM #}
+                            <div>
+                                {{ form_label(form.nom) }}
+                                {{ form_widget(form.nom) }}
+                            </div>
+    
+                        {# CHAMPS PRENOM #}
+                            <div>
+                                {{ form_label(form.prenom) }}
+                                {{ form_widget(form.prenom) }}
+                            </div>
+    
+                        {# CHAMPS AGE #}
+                            <div>
+                                {{ form_label(form.age) }}
+                                {{ form_widget(form.age) }}
+                            </div>
+    
+                        {# CHAMPS EMAIL #}
+                            <div>
+                                {{ form_label(form.email) }}
+                                {{ form_widget(form.email) }}
+                            </div>
+    
+                        {# CHAMPS FLAG MAJEUR #}
+                            <div>
+                                {{ form_label(form.flagMajeur) }}
+                                {{ form_widget(form.flagMajeur) }}
+                            </div>
+        
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+
+        {# DATATABLE AVEC LES DONNEES #}
+        <div class="row">
+            <div class="offset-xl-3 col-xl-6 mt-5">
+                <table id="table_client" class="col-12 border border dark">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>Age</th>
+                            <th>Email</th>
+                            <th>Majorité</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{# JS #}
+{% block javascripts %}
+    {# LIBRAIRIE DATATABLE #}
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.20/datatables.min.js"></script>
+    {# CUSTOM #}
+    <script type="text/javascript" language="javascript" class="init">
+        $(document).ready(function(){
+            var route = Routing.generate('charger_client');
+            var $tableClient = $('#table_client').DataTable({
+                "dom": "<'container-12 clearfix'"+
+                                "<'grid-12'tr>" +
+                                "<'grid-12'i>"+
+                                "<'grid-12'l>"+
+                                "<'grid-12'p>"+
+                            ">",
+                    "pageLength": 25,
+                    "serverSide": true,
+                    "ajax": {
+                        "url" : route,
+                        "method": 'POST',
+                    },
+                    "order" : [0, 'asc'],
+                    "columnDefs": [
+                        { "target": 0, "orderable": true, "visible": true },
+                        { "target": 1, "orderable": true, "visible": true },
+                        { "target": 2, "orderable": true, "visible": true },
+                        { "target": 3, "orderable": true, "visible": true },
+                        { "target": 4, "orderable": true, "visible": true },
+                        { "target": 5, "orderable": true, "visible": true },
+                    ],
+                    "language": {
+                        "url": '{{ asset("french.json") }}'
+                    },
+                    drawCallback: function(){
+                        $('#table_client').removeClass('load-table');
+                    }
+            });
+        });
+        
+    </script>
+{% endblock %}
